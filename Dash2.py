@@ -75,32 +75,7 @@ st.markdown(
 @st.cache_data
 def load_data(uploaded_file=None):
 
-    if uploaded_file is not None:
-
-        data = pd.read_excel(uploaded_file)
-
-    else:
-
-        possible_files = [
-            "Credir_Card_Bank(2).xlsx",
-            "Credir_Card_Bank.xlsx",
-            "data/Credir_Card_Bank(2).xlsx"
-        ]
-
-        file_path = None
-
-        for file in possible_files:
-
-            if os.path.exists(file):
-
-                file_path = file
-                break
-
-        if file_path is None:
-
-            return None
-
-        data = pd.read_excel(file_path)
+        data = pd.read_excel("Credir_Card_Bank.xlsx")
 
     # Clean column names
 
