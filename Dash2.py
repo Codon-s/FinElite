@@ -736,55 +736,71 @@ with col1:
 
 
 # ============================================================
-# LINE PLOT — INCOME VS AVERAGE SAVINGS
+# 2. CANDLESTICK — SAVINGS DISTRIBUTION
 # ============================================================
 
-if all(
-    c in filtered_df.columns
-    for c in ["Annual_Income", "Savings_Balance"]
-):
+with col2:
 
-    income_data = filtered_df.copy()
+    required_columns = [
+        "Employment_Type",
+        "Savings_Balance"
+    ]
 
-    income_data["Income_Band"] = pd.cut(
-        income_data["Annual_Income"],
-        bins=5
-    )
+    if all(
+        c in filtered_df.columns
+        for c in required_columns
+    ):
 
-    income_summary = (
-        income_data
-        .groupby("Income_Band", observed=True)
-        ["Savings_Balance"]
-        .mean()
-        .reset_index()
-    )
+        candle_data = (
+            filtered_df
+            .groupby("Employment_Type")["Savings_Balance"]
+            .agg(
+                Open=lambda x: x.quantile(0.25),
+                High="max",
+                Low="min",
+                Close=lambda x: x.quantile(0.75)
+            )
+            .reset_index()
+        )
 
-    income_summary["Income_Band"] = (
-        income_summary["Income_Band"]
-        .astype(str)
-    )
+        fig = go.Figure()
 
-    fig = px.line(
-        income_summary,
+        fig.add_trace(
+            go.Candlestick(
 
-        x="Income_Band",
+                x=candle_data["Employment_Type"],
 
-        y="Savings_Balance",
+                open=candle_data["Open"],
 
-        markers=True,
+                high=candle_data["High"],
 
-        title="Average Savings by Income Range",
+                low=candle_data["Low"],
 
-        labels={
-            "Income_Band": "Annual Income Range",
-            "Savings_Balance": "Average Savings (₹)"
-        }
-    )
+                close=candle_data["Close"],
 
-    st.plotly_chart(
-        fig,
-        use_container_width=True
-    )
+                increasing_line_color="green",
+
+                decreasing_line_color="red"
+            )
+        )
+
+        fig.update_layout(
+
+            title="Savings Balance Distribution",
+
+            xaxis_title="Employment Type",
+
+            yaxis_title="Savings Balance (₹)",
+
+            xaxis_rangeslider_visible=False,
+
+            hovermode="x unified"
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
 
 
 
