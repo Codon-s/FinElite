@@ -662,71 +662,42 @@ with tabs[0]:
 
     # Income vs savings
 
-
-
-
-
-
-
-
-
-
-   # ============================================================
-# FINANCIAL POSITION — BAR & LINE CHARTS
-# ============================================================
-
-col1, col2 = st.columns(2)
-
-
-# ============================================================
-# 1. BAR PLOT — AVERAGE SAVINGS BY EMPLOYMENT TYPE
-# ============================================================
-
-with col1:
-
-    required_columns = [
-        "Employment_Type",
-        "Savings_Balance"
-    ]
-
     if all(
         c in filtered_df.columns
-        for c in required_columns
-    ):
+        for c in [
+            "Annual_Income",
+            "Savings_Balance"
+        ]
+    )
 
-        savings_data = (
-            filtered_df
-            .groupby("Employment_Type")["Savings_Balance"]
-            .mean()
-            .reset_index()
-        )
+        fig = px.scatter(
 
-        savings_data = savings_data.sort_values(
-            "Savings_Balance",
-            ascending=False
-        )
+            filtered_df,
 
-        fig = px.bar(
-            savings_data,
-
-            x="Employment_Type",
+            x="Annual_Income",
 
             y="Savings_Balance",
 
-            text_auto=".2s",
+            size="Credit_Limit"
+            if "Credit_Limit"
+            in filtered_df.columns
+            else None,
 
-            title="Average Savings by Employment Type",
+            color="Credit_Band"
+            if "Credit_Band"
+            in filtered_df.columns
+            else None,
 
-            labels={
-                "Employment_Type": "Employment Type",
-                "Savings_Balance": "Average Savings (₹)"
-            }
-        )
+            hover_data=[
+                c for c in [
+                    "Customer_ID",
+                    "Credit_Score",
+                    "Employment_Type"
+                ]
+                if c in filtered_df.columns
+            ],
 
-        fig.update_layout(
-            xaxis_title="Employment Type",
-            yaxis_title="Average Savings (₹)",
-            hovermode="x unified"
+            title="Annual Income vs Savings Balance"
         )
 
         st.plotly_chart(
@@ -735,87 +706,51 @@ with col1:
         )
 
 
-# ============================================================
-# 2. CANDLESTICK — SAVINGS DISTRIBUTION
-# ============================================================
+# Income vs investments
 
 with col2:
 
-    required_columns = [
-        "Employment_Type",
-        "Savings_Balance"
-    ]
-
     if all(
         c in filtered_df.columns
-        for c in required_columns
+        for c in [
+            "Annual_Income",
+            "Investment_Value"
+        ]
     ):
 
-        candle_data = (
-            filtered_df
-            .groupby("Employment_Type")["Savings_Balance"]
-            .agg(
-                Open=lambda x: x.quantile(0.25),
-                High="max",
-                Low="min",
-                Close=lambda x: x.quantile(0.75)
-            )
-            .reset_index()
-        )
+        fig = px.scatter(
 
-        fig = go.Figure()
+            filtered_df,
 
-        fig.add_trace(
-            go.Candlestick(
+            x="Annual_Income",
 
-                x=candle_data["Employment_Type"],
+            y="Investment_Value",
 
-                open=candle_data["Open"],
+            size="Credit_Limit"
+            if "Credit_Limit"
+            in filtered_df.columns
+            else None,
 
-                high=candle_data["High"],
+            color="Employment_Type"
+            if "Employment_Type"
+            in filtered_df.columns
+            else None,
 
-                low=candle_data["Low"],
+            hover_data=[
+                c for c in [
+                    "Customer_ID",
+                    "Credit_Score"
+                ]
+                if c in filtered_df.columns
+            ],
 
-                close=candle_data["Close"],
-
-                increasing_line_color="green",
-
-                decreasing_line_color="red"
-            )
-        )
-
-        fig.update_layout(
-
-            title="Savings Balance Distribution",
-
-            xaxis_title="Employment Type",
-
-            yaxis_title="Savings Balance (₹)",
-
-            xaxis_rangeslider_visible=False,
-
-            hovermode="x unified"
+            title="Annual Income vs Investment Value"
         )
 
         st.plotly_chart(
             fig,
             use_container_width=True
         )
-
-
-
-
-
-
-
-    
-#########
-
-
-
-
-
-
 
     
     st.subheader(
