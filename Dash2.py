@@ -73,18 +73,17 @@ st.markdown(
 # ============================================================
 
 @st.cache_data
-def load_data(uploaded_file=None):
+def load_data():
 
-        data = pd.read_excel("Credir_Card_Bank.xlsx")
+    data = pd.read_excel("Credir_Card_Bank(2).xlsx")
 
     # Clean column names
-
     data.columns = (
         data.columns
         .str.strip()
-        .str.replace(" ", "_")
+        .str.replace(" ", "_", regex=False)
     )
-
+    
     # Numeric columns
 
     numeric_columns = [
