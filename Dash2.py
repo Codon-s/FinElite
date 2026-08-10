@@ -72,10 +72,14 @@ st.markdown(
 # LOAD DATA
 # ============================================================
 
+# ============================================================
+# LOAD PERMANENT CONFIRMED DATASET
+# ============================================================
+
 @st.cache_data
 def load_data():
 
-    data = pd.read_excel("Credir_Card_Bank(2).xlsx")
+    data = pd.read_excel("Credir_Card_Bank.xlsx")
 
     # Clean column names
     data.columns = (
@@ -83,11 +87,9 @@ def load_data():
         .str.strip()
         .str.replace(" ", "_", regex=False)
     )
-    
+
     # Numeric columns
-
     numeric_columns = [
-
         "Age",
         "Monthly_Income",
         "Annual_Income",
@@ -120,6 +122,10 @@ def load_data():
             )
 
     return data
+
+
+# Load the confirmed dataset
+df = load_data()
 
 # ============================================================
 # SIDEBAR FILTERS
