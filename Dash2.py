@@ -133,7 +133,6 @@ st.sidebar.title("💳 Credit Card Bank")
 st.sidebar.markdown(
     "### Dashboard Controls"
 )
-st.stop()
 
 # ============================================================
 # SIDEBAR FILTERS
