@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sb
 import plotly.express as px
-
+import plotly.graph_objects as go
 
 # ============================================================
 # PAGE CONFIGURATION
