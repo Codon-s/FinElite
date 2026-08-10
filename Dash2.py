@@ -672,7 +672,7 @@ with tabs[0]:
             ]
         ):
 
-            fig = px.bar(
+            fig = px.scatter(
 
                 filtered_df,
 
