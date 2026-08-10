@@ -662,99 +662,153 @@ with tabs[0]:
 
     # Income vs savings
 
-    with col1:
-
-        if all(
-            c in filtered_df.columns
-            for c in [
-                "Annual_Income",
-                "Savings_Balance"
-            ]
-        ):
-
-            fig = px.scatter(
-
-                filtered_df,
-
-                x="Annual_Income",
-
-                y="Savings_Balance",
-
-                size="Credit_Limit"
-                if "Credit_Limit"
-                in filtered_df.columns
-                else None,
-
-                color="Credit_Band"
-                if "Credit_Band"
-                in filtered_df.columns
-                else None,
-
-                hover_data=[
-                    c for c in [
-                        "Customer_ID",
-                        "Credit_Score",
-                        "Employment_Type"
-                    ]
-                    if c in filtered_df.columns
-                ],
-
-                title="Annual Income vs Savings Balance"
-            )
-
-            st.plotly_chart(
-                fig,
-                use_container_width=True
-            )
 
 
-    # Income vs investments
-
-    with col2:
-
-        if all(
-            c in filtered_df.columns
-            for c in [
-                "Annual_Income",
-                "Investment_Value"
-            ]
-        ):
-
-            fig = px.scatter(
-
-                filtered_df,
-
-                x="Annual_Income",
-
-                y="Investment_Value",
-
-                size="Credit_Limit"
-                if "Credit_Limit"
-                in filtered_df.columns
-                else None,
-
-                color="Employment_Type"
-                if "Employment_Type"
-                in filtered_df.columns
-                else None,
-
-                hover_data=[
-                    c for c in [
-                        "Customer_ID",
-                        "Credit_Score"
-                    ]
-                    if c in filtered_df.columns
-                ],
-
-                title="Annual Income vs Investment Value"
-            )
-
-            st.plotly_chart(
-                fig,
-                use_container_width=True
-            )
 
 
+
+
+
+
+
+   # ============================================================
+# FINANCIAL POSITION — BAR & LINE CHARTS
+# ============================================================
+
+col1, col2 = st.columns(2)
+
+
+# ============================================================
+# 1. BAR PLOT — AVERAGE SAVINGS BY EMPLOYMENT TYPE
+# ============================================================
+
+with col1:
+
+    required_columns = [
+        "Employment_Type",
+        "Savings_Balance"
+    ]
+
+    if all(
+        c in filtered_df.columns
+        for c in required_columns
+    ):
+
+        savings_data = (
+            filtered_df
+            .groupby("Employment_Type")["Savings_Balance"]
+            .mean()
+            .reset_index()
+        )
+
+        savings_data = savings_data.sort_values(
+            "Savings_Balance",
+            ascending=False
+        )
+
+        fig = px.bar(
+            savings_data,
+
+            x="Employment_Type",
+
+            y="Savings_Balance",
+
+            text_auto=".2s",
+
+            title="Average Savings by Employment Type",
+
+            labels={
+                "Employment_Type": "Employment Type",
+                "Savings_Balance": "Average Savings (₹)"
+            }
+        )
+
+        fig.update_layout(
+            xaxis_title="Employment Type",
+            yaxis_title="Average Savings (₹)",
+            hovermode="x unified"
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+
+# ============================================================
+# 2. LINE PLOT — AVERAGE INVESTMENT BY EMPLOYMENT TYPE
+# ============================================================
+
+with col2:
+
+    required_columns = [
+        "Employment_Type",
+        "Investment_Value"
+    ]
+
+    if all(
+        c in filtered_df.columns
+        for c in required_columns
+    ):
+
+        investment_data = (
+            filtered_df
+            .groupby("Employment_Type")["Investment_Value"]
+            .mean()
+            .reset_index()
+        )
+
+        fig = px.line(
+            investment_data,
+
+            x="Employment_Type",
+
+            y="Investment_Value",
+
+            markers=True,
+
+            text="Investment_Value",
+
+            title="Average Investment Value by Employment Type",
+
+            labels={
+                "Employment_Type": "Employment Type",
+                "Investment_Value": "Average Investment Value (₹)"
+            }
+        )
+
+        fig.update_traces(
+            texttemplate="₹%{text:,.0f}",
+            textposition="top center"
+        )
+
+        fig.update_layout(
+            xaxis_title="Employment Type",
+            yaxis_title="Average Investment Value (₹)",
+            hovermode="x unified"
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+
+
+
+
+
+
+    
+#########
+
+
+
+
+
+
+
+    
     st.subheader(
         "💡 Business Insights"
     )
