@@ -121,36 +121,6 @@ def load_data():
 
     return data
 
-
-# ============================================================
-# SIDEBAR
-# ============================================================
-
-st.sidebar.title("💳 Credit Card Bank")
-
-st.sidebar.markdown(
-    "### Dashboard Controls"
-)
-
-uploaded_file = st.sidebar.file_uploader(
-    "Upload Excel Dataset",
-    type=["xlsx", "xls"]
-)
-
-
-df = load_data(uploaded_file)
-
-
-if df is None:
-
-    st.error(
-        "Dataset not found. Please upload "
-        "`Credir_Card_Bank(2).xlsx` from the sidebar."
-    )
-
-    st.stop()
-
-
 # ============================================================
 # SIDEBAR FILTERS
 # ============================================================
