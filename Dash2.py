@@ -736,62 +736,55 @@ with col1:
 
 
 # ============================================================
-# 2. LINE PLOT — AVERAGE INVESTMENT BY EMPLOYMENT TYPE
+# LINE PLOT — INCOME VS AVERAGE SAVINGS
 # ============================================================
 
-with col2:
+if all(
+    c in filtered_df.columns
+    for c in ["Annual_Income", "Savings_Balance"]
+):
 
-    required_columns = [
-        "Employment_Type",
-        "Investment_Value"
-    ]
+    income_data = filtered_df.copy()
 
-    if all(
-        c in filtered_df.columns
-        for c in required_columns
-    ):
+    income_data["Income_Band"] = pd.cut(
+        income_data["Annual_Income"],
+        bins=5
+    )
 
-        investment_data = (
-            filtered_df
-            .groupby("Employment_Type")["Investment_Value"]
-            .mean()
-            .reset_index()
-        )
+    income_summary = (
+        income_data
+        .groupby("Income_Band", observed=True)
+        ["Savings_Balance"]
+        .mean()
+        .reset_index()
+    )
 
-        fig = px.line(
-            investment_data,
+    income_summary["Income_Band"] = (
+        income_summary["Income_Band"]
+        .astype(str)
+    )
 
-            x="Employment_Type",
+    fig = px.line(
+        income_summary,
 
-            y="Investment_Value",
+        x="Income_Band",
 
-            markers=True,
+        y="Savings_Balance",
 
-            text="Investment_Value",
+        markers=True,
 
-            title="Average Investment Value by Employment Type",
+        title="Average Savings by Income Range",
 
-            labels={
-                "Employment_Type": "Employment Type",
-                "Investment_Value": "Average Investment Value (₹)"
-            }
-        )
+        labels={
+            "Income_Band": "Annual Income Range",
+            "Savings_Balance": "Average Savings (₹)"
+        }
+    )
 
-        fig.update_traces(
-            texttemplate="₹%{text:,.0f}",
-            textposition="top center"
-        )
-
-        fig.update_layout(
-            xaxis_title="Employment Type",
-            yaxis_title="Average Investment Value (₹)",
-            hovermode="x unified"
-        )
-
-        st.plotly_chart(
-            fig,
-            use_container_width=True
-        )
+    st.plotly_chart(
+        fig,
+        use_container_width=True
+    )
 
 
 
