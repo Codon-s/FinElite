@@ -660,97 +660,99 @@ with tabs[0]:
     col1, col2 = st.columns(2)
 
 
-    # Income vs savings
+       # Income vs savings
 
-    if all(
-        c in filtered_df.columns
-        for c in [
-            "Annual_Income",
-            "Savings_Balance"
-        ]
-    )
+    with col1:
 
-        fig = px.scatter(
+        if all(
+            c in filtered_df.columns
+            for c in [
+                "Annual_Income",
+                "Savings_Balance"
+            ]
+        ):
 
-            filtered_df,
+            fig = px.scatter(
 
-            x="Annual_Income",
+                filtered_df,
 
-            y="Savings_Balance",
+                x="Annual_Income",
 
-            size="Credit_Limit"
-            if "Credit_Limit"
-            in filtered_df.columns
-            else None,
+                y="Savings_Balance",
 
-            color="Credit_Band"
-            if "Credit_Band"
-            in filtered_df.columns
-            else None,
+                size="Credit_Limit"
+                if "Credit_Limit"
+                in filtered_df.columns
+                else None,
 
-            hover_data=[
-                c for c in [
-                    "Customer_ID",
-                    "Credit_Score",
-                    "Employment_Type"
-                ]
-                if c in filtered_df.columns
-            ],
+                color="Credit_Band"
+                if "Credit_Band"
+                in filtered_df.columns
+                else None,
 
-            title="Annual Income vs Savings Balance"
-        )
+                hover_data=[
+                    c for c in [
+                        "Customer_ID",
+                        "Credit_Score",
+                        "Employment_Type"
+                    ]
+                    if c in filtered_df.columns
+                ],
 
-        st.plotly_chart(
-            fig,
-            use_container_width=True
-        )
+                title="Annual Income vs Savings Balance"
+            )
+
+            st.plotly_chart(
+                fig,
+                use_container_width=True
+            )
 
 
-# Income vs investments
+    # Income vs investments
 
-with col2:
+    with col2:
 
-    if all(
-        c in filtered_df.columns
-        for c in [
-            "Annual_Income",
-            "Investment_Value"
-        ]
-    ):
+        if all(
+            c in filtered_df.columns
+            for c in [
+                "Annual_Income",
+                "Investment_Value"
+            ]
+        ):
 
-        fig = px.scatter(
+            fig = px.scatter(
 
-            filtered_df,
+                filtered_df,
 
-            x="Annual_Income",
+                x="Annual_Income",
 
-            y="Investment_Value",
+                y="Investment_Value",
 
-            size="Credit_Limit"
-            if "Credit_Limit"
-            in filtered_df.columns
-            else None,
+                size="Credit_Limit"
+                if "Credit_Limit"
+                in filtered_df.columns
+                else None,
 
-            color="Employment_Type"
-            if "Employment_Type"
-            in filtered_df.columns
-            else None,
+                color="Employment_Type"
+                if "Employment_Type"
+                in filtered_df.columns
+                else None,
 
-            hover_data=[
-                c for c in [
-                    "Customer_ID",
-                    "Credit_Score"
-                ]
-                if c in filtered_df.columns
-            ],
+                hover_data=[
+                    c for c in [
+                        "Customer_ID",
+                        "Credit_Score"
+                    ]
+                    if c in filtered_df.columns
+                ],
 
-            title="Annual Income vs Investment Value"
-        )
+                title="Annual Income vs Investment Value"
+            )
 
-        st.plotly_chart(
-            fig,
-            use_container_width=True
-        )
+            st.plotly_chart(
+                fig,
+                use_container_width=True
+            )
 
     
     st.subheader(
