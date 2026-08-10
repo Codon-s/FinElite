@@ -72,10 +72,6 @@ st.markdown(
 # LOAD DATA
 # ============================================================
 
-# ============================================================
-# LOAD PERMANENT CONFIRMED DATASET
-# ============================================================
-
 @st.cache_data
 def load_data():
 
@@ -126,6 +122,18 @@ def load_data():
 
 # Load the confirmed dataset
 df = load_data()
+
+
+# ============================================================
+# SIDEBAR
+# ============================================================
+
+st.sidebar.title("💳 Credit Card Bank")
+
+st.sidebar.markdown(
+    "### Dashboard Controls"
+)
+st.stop()
 
 # ============================================================
 # SIDEBAR FILTERS
